@@ -1,8 +1,10 @@
+# imports
 from random import randrange
 from fastapi import FastAPI
 from fastapi import Response
 from post import Post
 
+# setting FastAPI app
 app = FastAPI()
 my_posts = [
             {"title": "title of post 1",
@@ -14,22 +16,23 @@ my_posts = [
              "id": 2}
         ]
 
+# function to iterate throught list to find post based on id passed to the function
 def find_post(id):
     for p in my_posts:
         if p["id"] == id:
             return p
 
-
+# root mapping
 @app.get("/")
 def root():
     return {"message": "Hello World yoooooooo"}
 
-
+# get all posts Get mapping
 @app.get("/posts")
 def get_posts():
     return [{"Posts": my_posts}]
 
-
+# create post with Post mapping
 @app.post("/posts")
 def create_post(post: Post):
     if my_posts[0] == "PLACEHOLDER":
@@ -39,7 +42,7 @@ def create_post(post: Post):
     my_posts.append(post_dict)
     return {"Post": post_dict}
 
-
+# get post depending on ID in url
 @app.get("/posts/{id}")
 def get_post(id: int, response: Response):
     post = find_post(id)
