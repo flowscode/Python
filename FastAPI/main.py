@@ -8,6 +8,7 @@ my_posts = [
             {"title": "title of post 1",
             "content": "content of post 1",
             "id": 1},
+            
             {"title": "fave car",
              "content": "BMW",
              "id": 2}
