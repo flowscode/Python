@@ -1,7 +1,7 @@
 # imports
 from random import randrange
-from fastapi import FastAPI
-from fastapi import Response
+from telnetlib import STATUS
+from fastapi import FastAPI, Response, status, HTTPException
 from post import Post
 
 # setting FastAPI app
@@ -40,18 +40,21 @@ def create_post(post: Post):
     post.id = randrange(0, 10000000)
     post_dict = post.dict()
     my_posts.append(post_dict)
-    return {"Post": post_dict}
+    raise HTTPException(status_code=status.HTTP_201_CREATED, 
+                            detail=post_dict)
 
 # get post depending on ID in url
 @app.get("/posts/{id}")
-def get_post(id: int, response: Response):
+def get_post(id: int):
+    
     post = find_post(id)
-    print(post)
     if not post:
-        response.status_code = 404
-        response.body = f"Post with id {id} was not found"
-        return {"Response": [
-            {"Status Code": response.status_code},
-            {"Body": response.body},
-        ]}
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, 
+                            detail=f"Post with id {id} was not found")
+        # response.status_code = 404
+        # response.body = f"Post with id {id} was not found"
+        # return {"Response": [
+        #     {"Status Code": response.status_code},
+        #     {"Body": response.body},
+        # ]}
     return {"Post": post}
