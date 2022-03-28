@@ -4,7 +4,7 @@
 from random import randrange
 from telnetlib import STATUS
 from fastapi import FastAPI, Response, status, HTTPException, Depends
-from app.post import Post
+from app.post import PostCreate
 import psycopg2
 from psycopg2.extras import RealDictCursor
 import time
@@ -56,7 +56,7 @@ def get_posts(db: Session = Depends(get_db)):
 
 #################################### CREATE post with Post mapping
 @app.post("/posts")
-def create_post(post: Post,db: Session = Depends(get_db)):
+def create_post(post: PostCreate,db: Session = Depends(get_db)):
     # cursor.execute("""INSERT INTO posts (title, content, published) VALUES (%s, %s, %s) RETURNING * """, (post.title, post.content, post.published))
     # new_post = cursor.fetchone()
     # conn.commit()
@@ -95,7 +95,7 @@ def delete_post(id: int, db: Session = Depends(get_db)):
     
 ################################# UPDATE a post db
 @app.put("/posts/{id}")
-def update_post(id: int, updated_post: Post, db: Session = Depends(get_db)):
+def update_post(id: int, updated_post: PostCreate, db: Session = Depends(get_db)):
     # cursor.execute("""UPDATE posts SET title = %s, content = %s, published = %s WHERE id = %s RETURNING * """,(post.title, post.content, post.published, str(id)))
     # updated_post = cursor.fetchone()
     # conn.commit()
