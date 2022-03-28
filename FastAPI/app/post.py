@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 
 # REQUEST
 class PostBase(BaseModel):
@@ -10,10 +10,23 @@ class PostBase(BaseModel):
 
 class PostCreate(PostBase):
     pass
+class UserBase(BaseModel):
+    email: EmailStr
+    password: str
+ 
+class UserCreate(UserBase):
+    pass    
 
 # RESPONSE
 class Post(PostBase):
     id: int
+    created_at: datetime
+    class Config:
+        orm_mode = True
+        
+class User(BaseModel):
+    id: int
+    email: EmailStr
     created_at: datetime
     class Config:
         orm_mode = True

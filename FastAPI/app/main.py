@@ -4,7 +4,7 @@
 from random import randrange
 from telnetlib import STATUS
 from fastapi import FastAPI, Response, status, HTTPException, Depends
-from app.post import Post, PostCreate
+from app.post import Post, PostCreate, User, UserCreate
 import psycopg2
 from psycopg2.extras import RealDictCursor
 import time
@@ -107,3 +107,13 @@ def update_post(id: int, updated_post: PostCreate, db: Session = Depends(get_db)
     post_query.update(updated_post.dict(), synchronize_session=False)
     db.commit()
     return post_query.first()
+
+####################### CREATE A NEW USER
+@app.post("/users", status_code=status.HTTP_201_CREATED, response_model=User)
+def create_user(user: UserCreate, db: Session = Depends(get_db)):
+    new_user=models.User(**user.dict())
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    
+    return new_user
