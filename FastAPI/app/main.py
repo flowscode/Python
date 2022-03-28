@@ -29,43 +29,6 @@ while True:
         print("Error: ", error)    
         time.sleep(2)
 
-
-
-# in memory db (LIST)
-my_posts = [
-            {"title": "title of post 1",
-            "content": "content of post 1",
-            "id": 1},
-            
-            {"title": "fave car",
-             "content": "BMW",
-             "id": 2}
-        ]
-
-# # function to iterate throught list to find post based on id passed to the function
-# def find_post(id):
-#     for p in my_posts:
-#         if p["id"] == id:
-#             return p
-
-# # Function to find and delete post
-# def find_and_delete_post(id):
-#     for p in my_posts:
-#         if p["id"] == id:
-#             my_posts.remove(p)
-#             raise HTTPException(status_code=status.HTTP_204_NO_CONTENT,
-#                         detail=f"Post with id {id} has been removed")
-
-# function to find and update
-def find_and_update_post(id,post: Post):
-    for p in my_posts:
-        if p["id"] == id:
-            id = p.get("id")
-            p.update(post)
-            p["id"] = id
-            raise HTTPException(status_code=status.HTTP_201_CREATED,
-                        detail=f"Post with id {id} has been Updated")
-
 # root mapping
 @app.get("/")
 def root():
@@ -98,7 +61,7 @@ def get_post(id: int):
     return {"Post": post}
     
 
-# Delete post from list
+################################## DELET post from db
 @app.delete("/posts/{id}")
 def delete_post(id: int):
     cursor.execute("""DELETE FROM posts WHERE id = %s RETURNING * """,(str(id),))
@@ -110,7 +73,7 @@ def delete_post(id: int):
         
     
     
-# Update a post in list
+################################# UPDATE a post db
 @app.put("/posts/{id}")
 def update_post(id: int, post: Post):
     cursor.execute("""UPDATE posts SET title = %s, content = %s, published = %s WHERE id = %s RETURNING * """,(post.title, post.content, post.published, str(id)))
